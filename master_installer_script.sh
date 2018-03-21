@@ -2,8 +2,9 @@
 PRODUCT_HOME=/home/aarellan/software/amq/amq-broker-7.1.0
 SRC_DIR=/home/aarellan/software/amq
 SHARED_FILESYSTEM=\/home\/aarellan\/software\/amq\/common_persistence
+# Variables that must be adapted (only master/slave in different machines)
 HOST_IP=192.168.42.177
-SLAVE_IP=192.168.42.177:61716
+SLAVE_IP_PORT=192.168.42.177:61716
 
 # Variables that should not change
 INSTALLER=amq-broker-7.1.0-bin.zip
@@ -24,7 +25,7 @@ AMQ_SHARED_PERSISTENCE_LARGE_MESSAGE=$SHARED_FILESYSTEM\/large-messages
 LOCAL_IP=127.0.0.1
 ALL_ADDRESSES=0.0.0.0
 
-chmod +x /home/aarellan/software/amq/*.zip
+chmod +x $SRC_DIR/*.zip
 
 echo "  - Stop all existing AMQ processes..."
 echo
@@ -72,7 +73,7 @@ sed -i'' -e '/<broadcast-groups>/,/<\/discovery-groups>/d' $AMQ_MASTER_HOME/etc/
 sed -i'' -e "s/$LOCAL_IP/$ALL_ADDRESSES/" $AMQ_MASTER_HOME/etc/broker.xml
 sed -i'' -e "s/<name>$ALL_ADDRESSES/<name>$HOST_IP/" $AMQ_MASTER_HOME/etc/broker.xml
 sed -i'' -e "/<\/connector>/ a \
-        <connector name=\"discovery-connector\">tcp://$SLAVE_IP</connector>" $AMQ_MASTER_HOME/etc/broker.xml		
+        <connector name=\"discovery-connector\">tcp://$SLAVE_IP_PORT</connector>" $AMQ_MASTER_HOME/etc/broker.xml		
 sed -i'' -e 's/<discovery-group-ref discovery-group-name="dg-group1"\/>/<static-connectors>   <connector-ref>discovery-connector<\/connector-ref><\/static-connectors>/' $AMQ_MASTER_HOME/etc/broker.xml
 
 # Setting persistance changes

@@ -51,4 +51,46 @@ If installing from supported version of Red Hat Enterprise Linux you can use yum
 $ sudo yum install java-1.8.0-openjdk-devel git
 ```
 
+## Download
+
+Git clone this repository and then change directory to **amq-ha-shared-store**
+
+## Configuration
+
+Please read carefully the following configuration setup.
+
+As mentioned in a previous section. The master/slave can be configured in the same machine or in different machines, which requires specific configuration in each case.
+
+### Master/Slave on the same machine
+The following scripts must be adjusted:
+
+#### master_installer_script.sh 
+Set the correct directories for the variables:
+- PRODUCT_HOME = location where the AMQ 7 broker will be installed
+- SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
+- SHARED_FILESYSTEM = location of the shared file system used for master and slave.
+
+#### slave_installer_script.sh
+Set the correct directories for the variables:
+- PRODUCT_HOME = location where the AMQ 7 broker will be installed
+- SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
+- SHARED_FILESYSTEM = location of the shared file system used for master and slave.
+
+### Master/Slave on different machines  
+
+#### master_installer_script.sh 
+Set the correct directories for the variables:
+- PRODUCT_HOME = location where the AMQ 7 broker will be installed
+- SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
+- SHARED_FILESYSTEM = location of the shared file system used for master and slave. This is a shared file system which is accessible by both the master and slave nodes. Typically this is some kind of high performance Storage Area Network (SAN). It is not recommend you use Network Attached Storage (NAS). 
+- HOST_IP = the host IP address
+- SLAVE_IP_PORT = [host]:[port] the IP address of the slave node and the port of the AMQ installed on the slave host. The standard configuration has an port-offset of 100, which increase the port value during installation of the slave. Default slave port is: 61716 
+
+#### slave_installer_script.sh
+Set the correct directories for the variables:
+- PRODUCT_HOME = location where the AMQ 7 broker will be installed
+- SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
+- SHARED_FILESYSTEM = location of the shared file system used for master and slave. This is a shared file system which is accessible by both the master and slave nodes. Typically this is some kind of high performance Storage Area Network (SAN). It is not recommend you use Network Attached Storage (NAS).
+- HOST_IP = the host IP address
+- MASTER_IP_PORT = [host]:[port] the IP address of the master node and the port of the AMQ installed on the master host. Default master port is: 61616
 

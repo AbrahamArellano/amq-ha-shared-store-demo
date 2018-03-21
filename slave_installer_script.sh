@@ -2,8 +2,9 @@
 PRODUCT_HOME=/home/aarellan/software/amq/amq-broker-7.1.0
 SRC_DIR=/home/aarellan/software/amq
 SHARED_FILESYSTEM=\/home\/aarellan\/software\/amq\/common_persistence
+# Variables that must be adapted (only master/slave in different machines)
 HOST_IP=192.168.42.177
-MASTER_IP=192.168.42.177:61616
+MASTER_IP_PORT=192.168.42.177:61616
 
 # Variables that should not change
 INSTALLER=amq-broker-7.1.0-bin.zip
@@ -36,7 +37,7 @@ sed -i'' -e '/<broadcast-groups>/,/<\/discovery-groups>/d' $AMQ_SLAVE_HOME/etc/b
 sed -i'' -e "s/$LOCAL_IP/$ALL_ADDRESSES/" $AMQ_SLAVE_HOME/etc/broker.xml
 sed -i'' -e "s/<name>$ALL_ADDRESSES/<name>$HOST_IP/" $AMQ_SLAVE_HOME/etc/broker.xml
 sed -i'' -e "/<\/connector>/ a \
-        <connector name=\"discovery-connector\">tcp://$MASTER_IP</connector>" $AMQ_SLAVE_HOME/etc/broker.xml
+        <connector name=\"discovery-connector\">tcp://$MASTER_IP_PORT</connector>" $AMQ_SLAVE_HOME/etc/broker.xml
 sed -i'' -e '/<\/failover-on-shutdown>/ a \
                <allow-failback>true</allow-failback>' $AMQ_SLAVE_HOME/etc/broker.xml		
 sed -i'' -e 's/<discovery-group-ref discovery-group-name="dg-group1"\/>/<static-connectors>   <connector-ref>discovery-connector<\/connector-ref><\/static-connectors>/' $AMQ_SLAVE_HOME/etc/broker.xml

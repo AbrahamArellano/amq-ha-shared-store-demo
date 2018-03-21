@@ -22,17 +22,19 @@ AMQ_SHARED_PERSISTENCE_JOURNAL=$SHARED_FILESYSTEM\/journal
 AMQ_SHARED_PERSISTENCE_LARGE_MESSAGE=$SHARED_FILESYSTEM\/large-messages
 
 LOCAL_IP=127.0.0.1
+ALL_ADDRESSES=0.0.0.0
 
 echo "  - Create Replicated Slave"
 echo
 
-sh $AMQ_SERVER_BIN/artemis create --no-autotune --shared-store --failover-on-shutdown --slave --user admin --password password --role admin --allow-anonymous y --clustered --host $HOST_IP --cluster-user clusterUser --cluster-password clusterPassword  --max-hops 1 --port-offset 100 $AMQ_INSTANCES/$AMQ_SLAVE
+sh $AMQ_SERVER_BIN/artemis create --no-autotune --shared-store --failover-on-shutdown --slave --user admin --password password --role admin --allow-anonymous y --clustered --host $LOCAL_IP --cluster-user clusterUser --cluster-password clusterPassword  --max-hops 1 --port-offset 100 $AMQ_INSTANCES/$AMQ_SLAVE
 
 echo "  - Changing default slave clustering configuration"
 echo
 sed -i'' -e 's/<max-disk-usage>90<\/max-disk-usage>/<max-disk-usage>100<\/max-disk-usage>/' $AMQ_SLAVE_HOME/etc/broker.xml
 sed -i'' -e '/<broadcast-groups>/,/<\/discovery-groups>/d' $AMQ_SLAVE_HOME/etc/broker.xml
-sed -i'' -e "s/$LOCAL_IP/$HOST_IP/" $AMQ_SLAVE_HOME/etc/broker.xml
+sed -i'' -e "s/$LOCAL_IP/$ALL_ADDRESSES/" $AMQ_SLAVE_HOME/etc/broker.xml
+sed -i'' -e "s/<name>$ALL_ADDRESSES/<name>$HOST_IP/" $AMQ_SLAVE_HOME/etc/broker.xml
 sed -i'' -e "/<\/connector>/ a \
         <connector name=\"discovery-connector\">tcp://$MASTER_IP</connector>" $AMQ_SLAVE_HOME/etc/broker.xml
 sed -i'' -e '/<\/failover-on-shutdown>/ a \
@@ -57,7 +59,6 @@ sed -i'' -e "/<\/allow-origin>/ a \
 echo "  - Start up AMQ Slave in the background"
 echo
 sh $AMQ_SLAVE_HOME/bin/artemis-service start
-
 
 sleep 5
 

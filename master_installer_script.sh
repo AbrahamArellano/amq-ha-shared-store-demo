@@ -22,6 +22,7 @@ AMQ_SHARED_PERSISTENCE_JOURNAL=$SHARED_FILESYSTEM\/journal
 AMQ_SHARED_PERSISTENCE_LARGE_MESSAGE=$SHARED_FILESYSTEM\/large-messages
 
 LOCAL_IP=127.0.0.1
+ALL_ADDRESSES=0.0.0.0
 
 chmod +x /home/aarellan/software/amq/*.zip
 
@@ -62,13 +63,14 @@ chmod u+x $PRODUCT_HOME/bin/artemis
 echo "  - Create Replicated Master"
 echo
 
-sh $AMQ_SERVER_BIN/artemis create --no-autotune --shared-store --failover-on-shutdown --user admin --password password --role admin --allow-anonymous y --clustered --host $HOST_IP --cluster-user clusterUser --cluster-password clusterPassword  --max-hops 1 $AMQ_INSTANCES/$AMQ_MASTER
+sh $AMQ_SERVER_BIN/artemis create --no-autotune --shared-store --failover-on-shutdown --user admin --password password --role admin --allow-anonymous y --clustered --host $LOCAL_IP --cluster-user clusterUser --cluster-password clusterPassword  --max-hops 1 $AMQ_INSTANCES/$AMQ_MASTER
 
 echo "  - Changing default master clustering configuration"
 echo
 sed -i'' -e 's/<max-disk-usage>90<\/max-disk-usage>/<max-disk-usage>100<\/max-disk-usage>/' $AMQ_MASTER_HOME/etc/broker.xml
 sed -i'' -e '/<broadcast-groups>/,/<\/discovery-groups>/d' $AMQ_MASTER_HOME/etc/broker.xml
-sed -i'' -e "s/$LOCAL_IP/$HOST_IP/" $AMQ_MASTER_HOME/etc/broker.xml
+sed -i'' -e "s/$LOCAL_IP/$ALL_ADDRESSES/" $AMQ_MASTER_HOME/etc/broker.xml
+sed -i'' -e "s/<name>$ALL_ADDRESSES/<name>$HOST_IP/" $AMQ_MASTER_HOME/etc/broker.xml
 sed -i'' -e "/<\/connector>/ a \
         <connector name=\"discovery-connector\">tcp://$SLAVE_IP</connector>" $AMQ_MASTER_HOME/etc/broker.xml		
 sed -i'' -e 's/<discovery-group-ref discovery-group-name="dg-group1"\/>/<static-connectors>   <connector-ref>discovery-connector<\/connector-ref><\/static-connectors>/' $AMQ_MASTER_HOME/etc/broker.xml

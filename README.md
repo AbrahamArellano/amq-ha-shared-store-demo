@@ -101,7 +101,8 @@ Set the correct addresses and ports
 
 ## Deployment
 
-Download AMQ 7 Broker from Red Hat Developer Portal: --[download here](https://developers.redhat.com/products/amq/download/)
+Download AMQ 7 Broker from Red Hat Developer Portal: --[download here](https://developers.redhat.com/products/amq/download/). In case of different servers, please proceed to install on each server.
+
 
 Place the downloaded amq zip ("amq-broker-7.1.0-bin.zip") in the installs directory **[master|slave]_installer_script.sh/SRC_DIR**
 

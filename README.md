@@ -112,13 +112,13 @@ The AMQ installation must be done following the steps below:
 
 ### Master/Slave on same machine 
 
-#### 1 - Run script **master_installer_script.sh** on host
-#### 2 - Run script **slave_installer_script.sh** on host
+1 - Run script **master_installer_script.sh** on host
+2 - Run script **slave_installer_script.sh** on host
 
 ### Master/Slave on different machines 
 
-#### 1 - Run script **master_installer_script.sh** on master host
-#### 2 - Run script **slave_installer_script.sh** on slave host
+1 - Run script **master_installer_script.sh** on master host
+2 - Run script **slave_installer_script.sh** on slave host
 
 After successful deployment, you can test the cluster. 
 

@@ -55,7 +55,6 @@ sed -i'' -e "s/localhost/0.0.0.0/" $AMQ_SLAVE_HOME/etc/bootstrap.xml
 sed -i'' -e "/<\/allow-origin>/ a \
          \        <allow-origin>*:\/\/$HOST_IP*<\/allow-origin>   \ " $AMQ_SLAVE_HOME/etc/jolokia-access.xml
 
-
 echo "  - Start up AMQ Slave in the background"
 echo
 sh $AMQ_SLAVE_HOME/bin/artemis-service start

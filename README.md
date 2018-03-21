@@ -1,4 +1,4 @@
-# amq-ha-shared-store-demo
+# Red Hat AMQ 7 High Availability Shared Store - master/slave same server | different servers
 Local installation of AMQ HA using shared store
 
 ## Introduction

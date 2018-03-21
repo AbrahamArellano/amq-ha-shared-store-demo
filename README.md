@@ -99,16 +99,27 @@ Set the correct addresses and ports
 - HOST_IP = [host] the host IP address
 - MASTER_IP_PORT = [host]:[port] the IP address of the master node and the port of the AMQ installed on the master host. Default master port is: 61616
 
+## Deployment prerequisites
+
+- Download AMQ 7 Broker from Red Hat Developer Portal: --[download here](https://developers.redhat.com/products/amq/download/). In case of different servers, please proceed to install on each server.
+
+- Place the downloaded amq zip ("amq-broker-7.1.0-bin.zip") in the installs directory **[master|slave]_installer_script.sh/SRC_DIR**
+
+- Prepared the shared file system 
+
 ## Deployment
-
-Download AMQ 7 Broker from Red Hat Developer Portal: --[download here](https://developers.redhat.com/products/amq/download/). In case of different servers, please proceed to install on each server.
-
-
-Place the downloaded amq zip ("amq-broker-7.1.0-bin.zip") in the installs directory **[master|slave]_installer_script.sh/SRC_DIR**
-
 The AMQ installation must be done following the steps below:
-#### 1 - Run script **master_installer_script.sh**
-#### 2 - Run script **slave_installer_script.sh**
 
+### Master/Slave on same machine 
+
+#### 1 - Run script **master_installer_script.sh** on host
+#### 2 - Run script **slave_installer_script.sh** on host
+
+### Master/Slave on different machines 
+
+#### 1 - Run script **master_installer_script.sh** on master host
+#### 2 - Run script **slave_installer_script.sh** on slave host
+
+After successful deployment, you can test the cluster.
 
 

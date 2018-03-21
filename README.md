@@ -53,7 +53,7 @@ $ sudo yum install java-1.8.0-openjdk-devel git
 
 ## Download
 
-Git clone this repository and then change directory to **amq-ha-shared-store**
+Git clone this repository to [GIT_SOURCE] and then change directory name to **amq-ha-shared-store** 
 
 ## Configuration
 
@@ -123,3 +123,27 @@ The AMQ installation must be done following the steps below:
 After successful deployment, you can test the cluster. 
 
 
+## Test
+#### Sending messages
+
+To send messages to the master broker, execute the following script:
+
+```
+[GIT_SOURCE]/amq-ha-shared-store/test_scripts/create_queue_test.sh
+[GIT_SOURCE]/amq-ha-shared-store/test_scripts/producer_master_test_execution.sh
+```
+
+#### Browse messages on Master
+
+To check the messages were successfully send to the broker, check the queue in the broker web console.
+
+* Open a web browser and navigate to the AMQ web console http://localhost:8161/hawtio
+* In the left tree navigate to 127.0.0.1 > addresses > haQueue > queues > anycast > haQueue
+* Click on *Browse* (refresh if necessary)
+
+You will see the 10 messages send by the producer script.
+
+
+
+
+      

@@ -21,3 +21,34 @@ The disadvantage of shared-store replication is that it requires a shared file s
 
 This style of high availability differs from data replication in that it requires a shared file system which is accessible by both the master and slave nodes. Typically this is some kind of high performance Storage Area Network (SAN). It is not recommend you use Network Attached Storage (NAS). 
 
+## Prerequisites
+The provided scripts can be used to install AMQ in 2 different ways:
+- Master/Slave on the same machine: 1 machine with the prerequisites described below is required.
+- Master/Slave on different machines: 2 machines with the prerequisites described below are required.
+
+#### Hardware requirements
+* Operating System
+  * Mac OS X (10.8 or later) or
+  * Windows 7 (SP1) or
+  * Fedora (21 or later) or
+  * Red Hat Enterprise Linux 7
+* Memory: At least 2 GB+, preferred 4 GB
+
+#### Software requirements
+
+* Web Browser (preferably Chrome or Firefox)
+* Git client -- [download here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* http://github.com access
+
+For running JBoss AMQ 7 Broker
+
+* **Java Runtime Engine (JRE) 1.8** --[download here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* LibAIO (Optional)
+
+If installing from supported version of Red Hat Enterprise Linux you can use yum command to install pre-requisites.
+
+```
+$ sudo yum install java-1.8.0-openjdk-devel git
+```
+
+

@@ -13,4 +13,4 @@ AMQ_SLAVE_HOME=$AMQ_INSTANCES/$AMQ_SLAVE
 
 echo "  - Create haQueue on master broker "
 echo
-sh $AMQ_MASTER_HOME/bin/artemis queue create --auto-create-address --address haQueue --name haQueue --preserve-on-no-consumers --durable --anycast --url tcp://localhost:61616
+sh $AMQ_MASTER_HOME/bin/artemis queue create --auto-create-address --address haQueue --name haQueue --preserve-on-no-consumers --durable --anycast  --user amq_dev_spoc_user --password amq_dev_spoc_pass --url tcp://localhost:6161

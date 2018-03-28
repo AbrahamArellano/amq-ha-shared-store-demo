@@ -11,4 +11,4 @@ AMQ_SLAVE=slave
 AMQ_MASTER_HOME=$AMQ_INSTANCES/$AMQ_MASTER
 AMQ_SLAVE_HOME=$AMQ_INSTANCES/$AMQ_SLAVE
 
-$AMQ_SLAVE_HOME/bin/artemis producer --message-count 10 --url "tcp://localhost:61716" --destination queue://haQueue
+$AMQ_SLAVE_HOME/bin/artemis producer --message-count 10 --url "tcp://localhost:6171" --destination queue://haQueue --user amq_dev_spoc_user --password amq_dev_spoc_pass

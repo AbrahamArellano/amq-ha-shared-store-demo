@@ -21,3 +21,8 @@ if [ -x $PRODUCT_HOME.OLD ]; then
 		echo
 		rm -rf $PRODUCT_HOME.OLD
 fi
+
+rm -rf /home/aarellan/software/amq/common_persistence/paging
+rm -rf /home/aarellan/software/amq/common_persistence/bindings
+rm -rf /home/aarellan/software/amq/common_persistence/journal
+rm -rf /home/aarellan/software/amq/common_persistence/large-messages

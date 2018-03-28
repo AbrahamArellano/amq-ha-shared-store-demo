@@ -21,6 +21,36 @@ The disadvantage of shared-store replication is that it requires a shared file s
 
 This style of high availability differs from data replication in that it requires a shared file system which is accessible by both the master and slave nodes. Typically this is some kind of high performance Storage Area Network (SAN). It is not recommend you use Network Attached Storage (NAS). 
 
+## What does this project provides?
+This script is intended to be used for test or production environments where you have the following requirements:
+- Cluster with 2 nodes (master / slave)
+- HA using shared store
+- An **Admin** user
+- Address/Queue security: An additional user with limited permissions. (Using properties, no certificates)
+- AMQ tuning for: 
+	- Message redelivery
+	- Redelivery delay
+	- Message expire
+	- Dead letter address
+	- Slow consumer handling
+	- Paging
+- Access to the console from localhost and from a remote host
+- A configurable test suite: consumer and producer
+- Uninstaller script
+
+## What are the scripts provided?
+#### Installer scripts
+The installer scripts allow you to deploy a master and a slave AMQ 7 HA. It can be done in the same host or in different hosts.
+- master_installer_script: install the master
+- slave_installer_script: install the slave
+#### Uninstaller scripts
+The uninstaller script allows you to remove the AMQ 7 HA installation for master and slave and the clean up the persistence.
+- uninstaller_script.sh: uninstall the AMQ 7 instance(s) deployed on the host where is executed
+- uninstaller_persistence_script.sh: uninstall the AMQ 7 persistence storage
+
+
+## What is out of the box configurable?
+
 ## Prerequisites
 The provided scripts can be used to install AMQ in 2 different ways:
 - Master/Slave on the same machine: 1 machine with the prerequisites described below is required.

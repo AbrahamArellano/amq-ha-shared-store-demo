@@ -1,15 +1,16 @@
 # Variables that must be adapted
-PRODUCT_HOME=/home/aarellan/software/amq/amq-broker-7.1.0
-SRC_DIR=/home/aarellan/software/amq
 SHARED_FILESYSTEM=\/home\/aarellan\/software\/amq\/common_persistence
-# Variables that must be adapted (only master/slave in different machines)
 HOST_IP=192.168.122.1
 MASTER_DEFAULT_PORT=6161
 SLAVE_DEFAULT_PORT=6171
 SLAVE_IP_PORT=192.168.122.1:$SLAVE_DEFAULT_PORT
+CONSOLE_PORT=8161
+CLUSTER_CONNECTION_NAME=amq_cluster_configuration
 
 # Variables that should not change
-CLUSTER_CONNECTION_NAME=amq_cluster_configuration
+PRODUCT_HOME=/home/aarellan/software/amq/amq-broker-7.1.0
+SRC_DIR=/home/aarellan/software/amq
+
 INSTALLER=amq-broker-7.1.0-bin.zip
 
 AMQ_SERVER_CONF=$PRODUCT_HOME/etc
@@ -28,46 +29,10 @@ AMQ_SHARED_PERSISTENCE_LARGE_MESSAGE=$SHARED_FILESYSTEM\/large-messages
 LOCAL_IP=127.0.0.1
 ALL_ADDRESSES=0.0.0.0
 
-chmod +x $SRC_DIR/*.zip
-
-echo "  - Stop all existing AMQ processes..."
-echo
-jps -lm | grep artemis | awk '{print $1}' | if [[ $OSTYPE = "linux-gnu" ]]; then xargs -r kill -SIGTERM; else xargs kill -SIGTERM; fi
-
-# make some checks first before proceeding.
-if [[ -r $SRC_DIR/$INSTALLER || -L $SRC_DIR/$INSTALLER ]]; then
-		echo "  - $PRODUCT is present..."
-		echo
-else
-		echo Need to download $PRODUCT package from the Customer Support Portal
-		echo and place it in the $SRC_DIR directory to proceed...
-		echo
-		exit
-fi
-
-# Remove old install if it exists.
-if [ -x $PRODUCT_HOME ]; then
-		echo "  - existing $PRODUCT install detected..."
-		echo
-		echo "  - moving existing $PRODUCT aside..."
-		echo
-		rm -rf $PRODUCT_HOME.OLD
-		mv $PRODUCT_HOME $PRODUCT_HOME.OLD
-fi
-
-# Run installer.
-echo "  - Unpacking $PRODUCT $VERSION"
-echo
-mkdir -p $PRODUCT_HOME && unzip -q -d $PRODUCT_HOME/.. $SRC_DIR/$INSTALLER
-
-echo "  - Making sure 'AMQ' for server is executable..."
-echo
-chmod u+x $PRODUCT_HOME/bin/artemis
-
 echo "  - Create Replicated Master"
 echo
 
-sh $AMQ_SERVER_BIN/artemis create --no-autotune --shared-store --failover-on-shutdown --user admin --password password --role admin --clustered --host $LOCAL_IP --default-port $MASTER_DEFAULT_PORT --cluster-user amq_cluster_user --cluster-password amq_cluster_password  --max-hops 1 --require-login y $AMQ_INSTANCES/$AMQ_MASTER
+sh $AMQ_SERVER_BIN/artemis create --no-autotune --shared-store --failover-on-shutdown --user admin --password password --role admin --clustered --host $LOCAL_IP --default-port $MASTER_DEFAULT_PORT --cluster-user amq_cluster_user --cluster-password amq_cluster_password  --max-hops 1 --require-login y --no-amqp-acceptor --no-hornetq-acceptor --no-mqtt-acceptor --no-stomp-acceptor $AMQ_INSTANCES/$AMQ_MASTER
 
 echo "  - Changing default master clustering configuration"
 echo
@@ -90,6 +55,7 @@ sed -i'' -e "s|.\/data\/large-messages|$AMQ_SHARED_PERSISTENCE_LARGE_MESSAGE|" $
 echo "  - Adjust of the web console to listen all addresses"
 echo
 sed -i'' -e "s/localhost/0.0.0.0/" $AMQ_MASTER_HOME/etc/bootstrap.xml
+sed -i'' -e "s/8161/$CONSOLE_PORT/" $AMQ_MASTER_HOME/etc/bootstrap.xml
 
 sed -i'' -e "/<\/allow-origin>/ a \
          \        <allow-origin>*:\/\/$HOST_IP*<\/allow-origin>   \ " $AMQ_MASTER_HOME/etc/jolokia-access.xml

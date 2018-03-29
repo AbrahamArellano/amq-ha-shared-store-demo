@@ -39,6 +39,8 @@ This script is intended to be used for test or production environments where you
 - Uninstaller script
 
 ## What are the scripts provided?
+#### Product deployer
+- product_installer_script.sh: deploy the AMQ 7 binary on the given location. It is a prerequisite before any other script is executed.
 #### Installer scripts
 The installer scripts allow you to deploy a master and a slave AMQ 7 HA. It can be done in the same host or in different hosts.
 - master_installer_script: install the master
@@ -154,7 +156,8 @@ After successful deployment, you can test the cluster.
 
 
 ## Test
-#### Sending messages
+### Master active 
+#### Producing messages
 
 To send messages to the master broker, execute the following script:
 
@@ -173,6 +176,39 @@ To check the messages were successfully send to the broker, check the queue in t
 
 You will see the 10 messages send by the producer script.
 
+#### Consuming messages
+
+To consume messages from the master broker, execute the following script:
+
+```
+[GIT_SOURCE]/amq-ha-shared-store/test_scripts/consumer_master_test_execution.sh
+```
+
+### Slave active 
+#### Producing messages
+
+To send messages to the master broker, execute the following script:
+
+```
+[GIT_SOURCE]/amq-ha-shared-store/test_scripts/producer_slave_test_execution.sh
+```
+
+#### Browse messages on Master
+
+To check the messages were successfully send to the broker, check the queue in the broker web console.
+
+* Open a web browser and navigate to the AMQ web console http://localhost:8261/hawtio
+* In the left tree navigate to 127.0.0.1 > addresses > haQueue > queues > anycast > haQueue
+* Click on *Browse* (refresh if necessary)
+
+You will see the 10 messages send by the producer script.
+
+#### Consuming messages
+
+To consume messages from the master broker, execute the following script:
+
+```
+[GIT_SOURCE]/amq-ha-shared-store/test_scripts/consumer_slave_test_execution.sh
 
 
 

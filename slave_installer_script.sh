@@ -1,15 +1,16 @@
 # Variables that must be adapted
-PRODUCT_HOME=/home/aarellan/software/amq/amq-broker-7.1.0
-SRC_DIR=/home/aarellan/software/amq
 SHARED_FILESYSTEM=\/home\/aarellan\/software\/amq\/common_persistence
-# Variables that must be adapted (only master/slave in different machines)
 HOST_IP=192.168.122.1
 MASTER_DEFAULT_PORT=6161
 SLAVE_DEFAULT_PORT=6171
 MASTER_IP_PORT=192.168.122.1:$MASTER_DEFAULT_PORT
+CONSOLE_PORT=8162
+CLUSTER_CONNECTION_NAME=amq_cluster_configuration
 
 # Variables that should not change
-CLUSTER_CONNECTION_NAME=amq_cluster_configuration
+PRODUCT_HOME=/home/aarellan/software/amq/amq-broker-7.1.0
+SRC_DIR=/home/aarellan/software/amq
+
 INSTALLER=amq-broker-7.1.0-bin.zip
 
 AMQ_SERVER_CONF=$PRODUCT_HOME/etc
@@ -31,7 +32,7 @@ ALL_ADDRESSES=0.0.0.0
 echo "  - Create Replicated Slave"
 echo
 
-sh $AMQ_SERVER_BIN/artemis create --no-autotune --shared-store --failover-on-shutdown --slave --user admin --password password --role admin --allow-anonymous y --clustered --host $LOCAL_IP --default-port $SLAVE_DEFAULT_PORT --cluster-user amq_cluster_user --cluster-password amq_cluster_password --max-hops 1 --require-login y $AMQ_INSTANCES/$AMQ_SLAVE
+sh $AMQ_SERVER_BIN/artemis create --no-autotune --shared-store --failover-on-shutdown --slave --user admin --password password --role admin --allow-anonymous y --clustered --host $LOCAL_IP --default-port $SLAVE_DEFAULT_PORT --cluster-user amq_cluster_user --cluster-password amq_cluster_password --max-hops 1 --require-login y --no-amqp-acceptor --no-hornetq-acceptor --no-mqtt-acceptor --no-stomp-acceptor $AMQ_INSTANCES/$AMQ_SLAVE
 
 echo "  - Changing default slave clustering configuration"
 echo
@@ -56,6 +57,7 @@ sed -i'' -e "s|.\/data\/large-messages|$AMQ_SHARED_PERSISTENCE_LARGE_MESSAGE|" $
 echo "  - Adjust of the web console to listen all addresses"
 echo
 sed -i'' -e "s/localhost/0.0.0.0/" $AMQ_SLAVE_HOME/etc/bootstrap.xml
+sed -i'' -e "s/8161/$CONSOLE_PORT/" $AMQ_SLAVE_HOME/etc/bootstrap.xml
 
 sed -i'' -e "/<\/allow-origin>/ a \
          \        <allow-origin>*:\/\/$HOST_IP*<\/allow-origin>   \ " $AMQ_SLAVE_HOME/etc/jolokia-access.xml
@@ -104,7 +106,7 @@ sed -i'' -e "/<address-setting match=\"#\">/ a \
 		 \   <slow-consumer-check-period>10</slow-consumer-check-period> \n\
 		 \   <slow-consumer-threshold>10</slow-consumer-threshold> \n\
 		 \   <page-size-bytes>400Mb</page-size-bytes> \n\
-		 \   <page-max-cache-size>6</page-max-cache-size> \n\
+		 \   <page-max-cache-size>6</page-max-cache-size> \
 		 \ " $AMQ_SLAVE_HOME/etc/broker.xml
 	 
 echo "  - Start up AMQ Slave in the background"

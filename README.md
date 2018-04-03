@@ -192,6 +192,15 @@ After successful deployment, you can test the cluster.
 
 
 ## Test
+Please check the following variable in the tests scripts:
+
+- PRODUCT_HOME
+- AMQ_INSTANCES
+- AMQ_MASTER
+- AMQ_MASTER_HOME
+- AMQ_SLAVE
+- AMQ_SLAVE_HOME
+
 ### Master active 
 #### Producing messages
 

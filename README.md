@@ -252,6 +252,8 @@ To consume messages from the master broker, execute the following script:
 To uninstall the AMQ 7 HA installed with this project two uninstallers are provided.
 
 1 - Execute first the **uninstaller_script.sh** to stop and uninstall the AMQ 7
+
 2 - Configure and execute after (if required) the **uninstaller_persistence_script.sh** to delete the persistence.
+
 2.1. - Check the variable **SHARED_FILESYSTEM** 
 

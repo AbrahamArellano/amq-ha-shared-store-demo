@@ -103,13 +103,13 @@ The following scripts must be adjusted:
 Set the correct variables:
 - PRODUCT_HOME = location where the AMQ 7 broker will be installed
 - SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
-- SHARED_FILESYSTEM = location of the shared file system used for master and slave.
+- SHARED_FILESYSTEM = location of the shared file system used for master and slave. The characters must be escaped. 
 
 #### slave_installer_script.sh
 Set the correct variables:
 - PRODUCT_HOME = location where the AMQ 7 broker will be installed
 - SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
-- SHARED_FILESYSTEM = location of the shared file system used for master and slave.
+- SHARED_FILESYSTEM = location of the shared file system used for master and slave. The characters must be escaped.
 
 ### Master/Slave on different machines  
 The following scripts must be adjusted:
@@ -118,7 +118,7 @@ The following scripts must be adjusted:
 Set the correct variables:
 - PRODUCT_HOME = location where the AMQ 7 broker will be installed
 - SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
-- SHARED_FILESYSTEM = location of the shared file system used for master and slave.
+- SHARED_FILESYSTEM = location of the shared file system used for master and slave. The characters must be escaped.
 - HOST_IP= IP of the host where the current AMQ instance is deployed
 - MASTER_DEFAULT_PORT= port of the master AMQ instance
 - SLAVE_DEFAULT_PORT= port of the slave AMQ instance
@@ -132,7 +132,7 @@ Set the correct variables:
 Set the correct variables:
 - PRODUCT_HOME = location where the AMQ 7 broker will be installed
 - SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
-- SHARED_FILESYSTEM = location of the shared file system used for master and slave.
+- SHARED_FILESYSTEM = location of the shared file system used for master and slave. The characters must be escaped.
 - HOST_IP= IP of the host where the current AMQ instance is deployed
 - MASTER_DEFAULT_PORT= port of the master AMQ instance
 - SLAVE_DEFAULT_PORT= port of the slave AMQ instance
@@ -149,22 +149,44 @@ Set the correct addresses and ports
 
 - Download AMQ 7 Broker from Red Hat Developer Portal: --[download here](https://developers.redhat.com/products/amq/download/). In case of different servers, please proceed to install on each server.
 
-- Place the downloaded amq zip ("amq-broker-7.1.0-bin.zip") in the installs directory **[master|slave]_installer_script.sh/SRC_DIR**
+- Place the downloaded amq zip ("amq-broker-7.1.0-bin.zip") in the installs directory **[SRC_DIR]**
 
 - Prepared the shared file system 
 
 ## Deployment
 The AMQ installation must be done following the steps below:
 
+### Install the product
+Configure the **product_installer_script.sh** and execute it:
+1 -  Configure the following variables:
+- PRODUCT_HOME = location where the AMQ 7 broker will be installed
+- SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
+2 - Execute the script **product_installer_script.sh**
+```
+[GIT_SOURCE]/amq-ha-shared-store/product_installer_script.sh
+```
+
 ### Master/Slave on same machine 
 
-1 - Run script **master_installer_script.sh** on host
-2 - Run script **slave_installer_script.sh** on host
+1 - Run script **master_installer_script.sh** on the host
+```
+[GIT_SOURCE]/amq-ha-shared-store/master_installer_script.sh
+```
+2 - Run script **slave_installer_script.sh** on the host
+```
+[GIT_SOURCE]/amq-ha-shared-store/slave_installer_script.sh
+```
 
 ### Master/Slave on different machines 
 
 1 - Run script **master_installer_script.sh** on master host
+```
+[GIT_SOURCE]/amq-ha-shared-store/master_installer_script.sh
+```
 2 - Run script **slave_installer_script.sh** on slave host
+```
+[GIT_SOURCE]/amq-ha-shared-store/slave_installer_script.sh
+```
 
 After successful deployment, you can test the cluster. 
 
@@ -225,5 +247,11 @@ To consume messages from the master broker, execute the following script:
 [GIT_SOURCE]/amq-ha-shared-store/test_scripts/consumer_slave_test_execution.sh
 ```
 
+## Uninstall
 
+To uninstall the AMQ 7 HA installed with this project two uninstallers are provided.
+
+1 - Execute first the **uninstaller_script.sh** to stop and uninstall the AMQ 7
+2 - Configure and execute after (if required) the **uninstaller_persistence_script.sh** to delete the persistence.
+2.1. - Check the variable **SHARED_FILESYSTEM** 
 

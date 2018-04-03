@@ -24,6 +24,7 @@ This style of high availability differs from data replication in that it require
 ## What does this project provides?
 This script is intended to be used for test or production environments where you have the following requirements:
 - Cluster with 2 nodes (master / slave)
+- Cluster security and additional settings configuration
 - HA using shared store
 - An **Admin** user
 - Address/Queue security: An additional user with limited permissions. (Using properties, no certificates)
@@ -37,6 +38,8 @@ This script is intended to be used for test or production environments where you
 - Access to the console from localhost and from a remote host
 - A configurable test suite: consumer and producer
 - Uninstaller script
+- Web Console port configuration
+- Possibility to install with few changes multiple instances in the same host
 
 ## What are the scripts provided?
 #### Product deployer
@@ -97,13 +100,13 @@ As mentioned in a previous section. The master/slave can be configured in the sa
 The following scripts must be adjusted:
 
 #### master_installer_script.sh 
-Set the correct directories for the variables:
+Set the correct variables:
 - PRODUCT_HOME = location where the AMQ 7 broker will be installed
 - SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
 - SHARED_FILESYSTEM = location of the shared file system used for master and slave.
 
 #### slave_installer_script.sh
-Set the correct directories for the variables:
+Set the correct variables:
 - PRODUCT_HOME = location where the AMQ 7 broker will be installed
 - SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
 - SHARED_FILESYSTEM = location of the shared file system used for master and slave.
@@ -112,21 +115,32 @@ Set the correct directories for the variables:
 The following scripts must be adjusted:
 
 #### master_installer_script.sh 
-Set the correct directories for the variables:
+Set the correct variables:
 - PRODUCT_HOME = location where the AMQ 7 broker will be installed
 - SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
-- SHARED_FILESYSTEM = location of the shared file system used for master and slave. This is a shared file system which is accessible by both the master and slave nodes. Typically this is some kind of high performance Storage Area Network (SAN). It is not recommend you use Network Attached Storage (NAS). 
-
-Set the correct addresses and ports
-- HOST_IP = [host] the host IP address
-- SLAVE_IP_PORT = [host]:[port] the IP address of the slave node and the port of the AMQ installed on the slave host. The standard configuration has an port-offset of 100, which increase the port value during installation of the slave. Default slave port is: 61716 
+- SHARED_FILESYSTEM = location of the shared file system used for master and slave.
+- HOST_IP= IP of the host where the current AMQ instance is deployed
+- MASTER_DEFAULT_PORT= port of the master AMQ instance
+- SLAVE_DEFAULT_PORT= port of the slave AMQ instance
+- SLAVE_IP_PORT= IP of the host where the slave AMQ instance is installed
+- CONSOLE_PORT= the port of the web console
+- CLUSTER_CONNECTION_NAME= the name of the cluster connection
+- AMQ_MASTER= name of the current AMQ master instance. This allows to install multiple instances on the same host.  
+- AMQ_SLAVE= name of the current AMQ slave instance. This allows to install multiple instances on the same host.
 
 #### slave_installer_script.sh
-Set the correct directories for the variables:
+Set the correct variables:
 - PRODUCT_HOME = location where the AMQ 7 broker will be installed
 - SRC_DIR = location of the AMQ 7 installer "amq-broker-7.1.0-bin.zip"
-- SHARED_FILESYSTEM = location of the shared file system used for master and slave. This is a shared file system which is accessible by both the master and slave nodes. Typically this is some kind of high performance Storage Area Network (SAN). It is not recommend you use Network Attached Storage (NAS).
-
+- SHARED_FILESYSTEM = location of the shared file system used for master and slave.
+- HOST_IP= IP of the host where the current AMQ instance is deployed
+- MASTER_DEFAULT_PORT= port of the master AMQ instance
+- SLAVE_DEFAULT_PORT= port of the slave AMQ instance
+- MASTER_IP_PORT= the IP of the host where the master AMQ instance is installed
+- CONSOLE_PORT= the port of the web console
+- CLUSTER_CONNECTION_NAME= the name of the cluster connection
+- AMQ_MASTER= name of the current AMQ master instance. This allows to install multiple instances on the same host.  
+- AMQ_SLAVE= name of the current AMQ slave instance. This allows to install multiple instances on the same host.
 Set the correct addresses and ports
 - HOST_IP = [host] the host IP address
 - MASTER_IP_PORT = [host]:[port] the IP address of the master node and the port of the AMQ installed on the master host. Default master port is: 61616
@@ -209,7 +223,7 @@ To consume messages from the master broker, execute the following script:
 
 ```
 [GIT_SOURCE]/amq-ha-shared-store/test_scripts/consumer_slave_test_execution.sh
+```
 
 
 
-      

@@ -1,16 +1,16 @@
 # Variables that must be adapted
 SHARED_FILESYSTEM=\/home\/aarellan\/software\/amq\/common_persistence
-HOST_IP=127.0.0.1
-MASTER_DEFAULT_PORT=6161
-SLAVE_DEFAULT_PORT=6171
-MASTER_IP_PORT=127.0.0.1:$MASTER_DEFAULT_PORT
+SLAVE_IP=127.0.0.1
+MASTER_PORT=6161
+SLAVE_PORT=6171
+MASTER_IP=127.0.0.1
 CONSOLE_PORT=8162
 CLUSTER_CONNECTION_NAME=amq_cluster_configuration
 
 # Variables that should not change
 PRODUCT_HOME=/home/aarellan/software/amq/amq-broker-7.1.0
 SRC_DIR=/home/aarellan/software/amq
-
+MASTER_IP_PORT=$MASTER_IP:$MASTER_PORT
 INSTALLER=amq-broker-7.1.0-bin.zip
 
 AMQ_SERVER_CONF=$PRODUCT_HOME/etc
@@ -32,14 +32,14 @@ ALL_ADDRESSES=0.0.0.0
 echo "  - Create Replicated Slave"
 echo
 
-sh $AMQ_SERVER_BIN/artemis create --no-autotune --shared-store --failover-on-shutdown --slave --user admin --password password --role admin --allow-anonymous y --clustered --host $LOCAL_IP --default-port $SLAVE_DEFAULT_PORT --cluster-user amq_cluster_user --cluster-password amq_cluster_password --max-hops 1 --require-login y --no-amqp-acceptor --no-hornetq-acceptor --no-mqtt-acceptor --no-stomp-acceptor $AMQ_INSTANCES/$AMQ_SLAVE
+sh $AMQ_SERVER_BIN/artemis create --no-autotune --shared-store --failover-on-shutdown --slave --user admin --password password --role admin --allow-anonymous y --clustered --host $LOCAL_IP --default-port $SLAVE_PORT --cluster-user amq_cluster_user --cluster-password amq_cluster_password --max-hops 1 --require-login y --no-amqp-acceptor --no-hornetq-acceptor --no-mqtt-acceptor --no-stomp-acceptor $AMQ_INSTANCES/$AMQ_SLAVE
 
 echo "  - Changing default slave clustering configuration"
 echo
 sed -i'' -e 's/<max-disk-usage>90<\/max-disk-usage>/<max-disk-usage>100<\/max-disk-usage>/' $AMQ_SLAVE_HOME/etc/broker.xml
 sed -i'' -e '/<broadcast-groups>/,/<\/discovery-groups>/d' $AMQ_SLAVE_HOME/etc/broker.xml
 sed -i'' -e "s/$LOCAL_IP/$ALL_ADDRESSES/" $AMQ_SLAVE_HOME/etc/broker.xml
-sed -i'' -e "s/<name>$ALL_ADDRESSES/<name>$HOST_IP/" $AMQ_SLAVE_HOME/etc/broker.xml
+sed -i'' -e "s/<name>$ALL_ADDRESSES/<name>$SLAVE_IP/" $AMQ_SLAVE_HOME/etc/broker.xml
 sed -i'' -e "/<\/connector>/ a \
         \        <connector name=\"discovery-connector\">tcp://$MASTER_IP_PORT</connector>" $AMQ_SLAVE_HOME/etc/broker.xml
 sed -i'' -e '/<\/failover-on-shutdown>/ a \
@@ -60,7 +60,7 @@ sed -i'' -e "s/localhost/0.0.0.0/" $AMQ_SLAVE_HOME/etc/bootstrap.xml
 sed -i'' -e "s/8161/$CONSOLE_PORT/" $AMQ_SLAVE_HOME/etc/bootstrap.xml
 
 sed -i'' -e "/<\/allow-origin>/ a \
-         \        <allow-origin>*:\/\/$HOST_IP*<\/allow-origin>   \ " $AMQ_SLAVE_HOME/etc/jolokia-access.xml
+         \        <allow-origin>*:\/\/$SLAVE_IP*<\/allow-origin>   \ " $AMQ_SLAVE_HOME/etc/jolokia-access.xml
 
 # Create role
 echo "  -Creating role spoc_role "

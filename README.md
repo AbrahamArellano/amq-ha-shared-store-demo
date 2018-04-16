@@ -192,14 +192,37 @@ After successful deployment, you can test the cluster.
 
 
 ## Test
-Please check the following variable in the tests scripts:
+In order to test your installation the project provides a test suite composed of the following test scripts:
 
-- PRODUCT_HOME
-- AMQ_INSTANCES
-- AMQ_MASTER
-- AMQ_MASTER_HOME
-- AMQ_SLAVE
-- AMQ_SLAVE_HOME
+1- [GIT_SOURCE]/amq-ha-shared-store/test_scripts/producer_master_test_execution.sh: produces 10 messages in the test queue of the master broker.
+2- [GIT_SOURCE]/amq-ha-shared-store/test_scripts/producer_slave_test_execution.sh: produces 10 messages in the test queue of the slave broker.
+3- [GIT_SOURCE]/amq-ha-shared-store/test_scripts/consumer_master_test_execution.sh: consumes 100 messages from the test queue of the master broker.
+4- [GIT_SOURCE]/amq-ha-shared-store/test_scripts/consumer_slave_test_execution.sh: consumes 100 messages from the test queue of the slave broker.
+
+In addition, there is a support script that set up the test environment:
+
+1- [GIT_SOURCE]/amq-ha-shared-store/test_scripts/create_queue_test.sh: create the test queue in the master broker. This script is triggered on the master broker.
+
+###Test scripts setup
+
+Check that the following variables have the correct values in the tests scripts:
+
+- [GIT_SOURCE]/amq-ha-shared-store/test_scripts/create_queue_test.sh
+
+    PRODUCT_HOME: location of the AMQ 7 installation
+    AMQ_MASTER: name of the current AMQ master instance.
+
+- [GIT_SOURCE]/amq-ha-shared-store/test_scripts/producer_master_test_execution.sh
+- [GIT_SOURCE]/amq-ha-shared-store/test_scripts/consumer_master_test_execution.sh
+
+    PRODUCT_HOME: location of the AMQ 7 installation
+    AMQ_MASTER: name of the current AMQ master instance.
+
+- [GIT_SOURCE]/amq-ha-shared-store/test_scripts/producer_slave_test_execution.sh
+- [GIT_SOURCE]/amq-ha-shared-store/test_scripts/consumer_slave_test_execution.sh
+
+    PRODUCT_HOME: location of the AMQ 7 installation
+    AMQ_SLAVE: name of the current AMQ slave instance.
 
 ### Master active 
 #### Producing messages
@@ -260,9 +283,12 @@ To consume messages from the master broker, execute the following script:
 
 To uninstall the AMQ 7 HA installed with this project two uninstallers are provided.
 
-1 - Execute first the **uninstaller_script.sh** to stop and uninstall the AMQ 7
+1. First of all, execute the uninstaller_script.sh script to stop and uninstall the AMQ 7 HA configuration.
 
-2 - Configure and execute after (if required) the **uninstaller_persistence_script.sh** to delete the persistence.
+2. Also, if required, configure and then execute the uninstaller_persistence_script.sh script to delete the persistence.
 
-2.1. - Check the variable **SHARED_FILESYSTEM** 
+3. On the scripts: uninstaller_script.sh and uninstaller_persistence_script.sh check that the following variables contain the correct values:
+
+    PRODUCT_HOME contains the location of the AMQ 7 broker distribution.
+    SHARED_FILESYSTEM location of the shared file system used for the master and the slave.
 

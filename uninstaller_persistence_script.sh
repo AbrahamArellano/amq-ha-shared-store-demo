@@ -1,6 +1,7 @@
 PRODUCT_HOME=/home/aarellan/software/amq/amq-broker-7.1.0
+SHARED_FILESYSTEM=/home/aarellan/software/amq/common_persistence
 
-rm -rf /home/aarellan/software/amq/common_persistence/paging
-rm -rf /home/aarellan/software/amq/common_persistence/bindings
-rm -rf /home/aarellan/software/amq/common_persistence/journal
-rm -rf /home/aarellan/software/amq/common_persistence/large-messages
+rm -rf $SHARED_FILESYSTEM/paging
+rm -rf $SHARED_FILESYSTEM/bindings
+rm -rf $SHARED_FILESYSTEM/journal
+rm -rf $SHARED_FILESYSTEM/large-messages
